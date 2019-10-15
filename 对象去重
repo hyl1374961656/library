@@ -1,0 +1,15 @@
+let gg=[
+	{id:0,name:"小明"},
+	{id:1,name:"小张"},
+	{id:2,name:"小李"},
+	{id:3,name:"小孙"},
+	{id:1,name:"小周"},
+	{id:2,name:"小陈"},
+	{id:5,name:"小陈"}
+]; 
+var obj = {}
+var pp = gg.reduce((cur,next)=>{
+	obj[next.id] ? " : obj[next.id] = true && cur. push(next)
+	return cur
+},[])
+console.log(pp)
