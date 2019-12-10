@@ -237,7 +237,77 @@
         }
  
  
- 
+//数据持久化    redux数据监听
+        cnpm i redux react-redux redux-promise redux-thunk redux-persist -S
+        //store页面
+        import { createStore, applyMiddleware, compose } from 'redux'
+        import promise from 'redux-promise'
+        import thunk from 'redux-thunk'
+        import { persistReducer } from 'redux-persist'
+        import storage from 'redux-persist/lib/storage'
+        import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
 
+        const initState = {
+          // 用户名
+          username: '',
+          // 账号密码
+          password: '',
+          // 是否选中记住密码
+          password_save: false,
+          // 主页表格数据
+          dataTable: [],
+        }
+
+        export default function redecer (state = initState, action) {
+          switch (action.type) {
+            // 登录
+            case 'LOGIN':
+              return { ...state, name: action.payload.token }
+
+            case 'SAVE_PASSWORD':
+              return { ...state, ...action.payload }
+
+            case 'TABLE_DATA':
+              return { ...state, dataTable: action.payload }
+
+            default:
+              return state
+          }
+        }
+
+        // 我要对哪些state做数据持久化
+        const rootPersistConfig = {
+          key: 'root',
+          storage: storage,
+          stateReconciler: autoMergeLevel2,
+          // 白名单
+          whitelist: ['username', 'password', 'password_save'],
+        }
+
+        // 单独为 某个 reduce 做数据持久化
+        const myPersistReducer = persistReducer(
+          rootPersistConfig, 
+          redecer,
+        )
+
+        const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+        const store = createStore(
+          myPersistReducer,
+          composeEnhancers(applyMiddleware(promise, thunk))
+        )
+
+        export { store }
+
+        //index.js入口文件
+        import { Provider } from 'react-redux'
+        import { persistStore } from 'redux-persist'
+        import { PersistGate } from 'redux-persist/lib/integration/react'
+        import { store } from './store'
+        
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistStore(store)}>
+            </PersistGate>
+        </Provider>
 
 
