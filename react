@@ -76,6 +76,20 @@ data.map((v,i) => {
 
 
 //路由懒加载
+    //package  内容配置
+    "babel": {
+    "presets": [
+        "react-app"
+      ],
+      "plugins": [
+        [
+          "@babel/plugin-syntax-dynamic-import",
+          {
+            "legacy": true
+          }
+        ]
+      ]
+    }
 
     //index.js入口文件
     import loadable from './pages/abc'
