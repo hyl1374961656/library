@@ -1,135 +1,170 @@
 //下拉加载
-import InfiniteScroll from 'react-infinite-scroller';
+        import InfiniteScroll from 'react-infinite-scroller';
 
-export default class extends React.Component {
+        export default class extends React.Component {
 
-  constructor (props) {
-    super(props)
-    this.state = {
-      hasMore: true,
-      data: [],
-      count: 0,
-    }
-    this.loadFunc()
-  }
-
-  // 加载更多数据
-  loadFunc = page => {
-    // page 当前滚动到了第几页
-    const { data, count } = this.state
-    // 超过200条数据 不继续监听下拉事件
-    if (count && data.length >= count) {
-      return false
-    }
-    // page 是当前请求第几页数据
-    // limit 每页我需要返回的数据条数
-    request('/Home/Apis/listWithPage', { page, limit: 10 })
-      .then(res => {
-        this.setState({
-          data: [...data, ...res.list],
-          count: res.count,
-        })
-      })
-      .catch(err => console.log(err))
-  }
-
-  render () {
-    const { hasMore, data } = this.state
-    return (
-      <div  className="wrap_box">
-        <InfiniteScroll
-            initialLoad={false}//	组件是否应加载第一组项目
-            pageStart={1}//要加载的第一页的编号，默认值为0，第一页为1
-            loadMore={this.loadFunc}
-            hasMore={hasMore}//是否还有更多项目要加载。如果事件监听器被删除false
-            loader={<div className="loader" key={0}>Loading ...</div>}
-            useWindow={false}//将滚动侦听器添加到窗口，或者添加组件的parentNode
-        >
-            {
-                data.map((v,k) => {
-                  return(
-                  <p key={k}>{v.title}</p>
-                  )
-                })
+          constructor (props) {
+            super(props)
+            this.state = {
+              hasMore: true,
+              data: [],
+              count: 0,
             }
-            
-        </InfiniteScroll>
-      </div>
-    )
-  }
-}
+            this.loadFunc()
+          }
+
+          // 加载更多数据
+          loadFunc = page => {
+            // page 当前滚动到了第几页
+            const { data, count } = this.state
+            // 超过200条数据 不继续监听下拉事件
+            if (count && data.length >= count) {
+              return false
+            }
+            // page 是当前请求第几页数据
+            // limit 每页我需要返回的数据条数
+            request('/Home/Apis/listWithPage', { page, limit: 10 })
+              .then(res => {
+                this.setState({
+                  data: [...data, ...res.list],
+                  count: res.count,
+                })
+              })
+              .catch(err => console.log(err))
+          }
+
+          render () {
+            const { hasMore, data } = this.state
+            return (
+              <div  className="wrap_box">
+                <InfiniteScroll
+                    initialLoad={false}//	组件是否应加载第一组项目
+                    pageStart={1}//要加载的第一页的编号，默认值为0，第一页为1
+                    loadMore={this.loadFunc}
+                    hasMore={hasMore}//是否还有更多项目要加载。如果事件监听器被删除false
+                    loader={<div className="loader" key={0}>Loading ...</div>}
+                    useWindow={false}//将滚动侦听器添加到窗口，或者添加组件的parentNode
+                >
+                    {
+                        data.map((v,k) => {
+                          return(
+                          <p key={k}>{v.title}</p>
+                          )
+                        })
+                    }
+
+                </InfiniteScroll>
+              </div>
+            )
+          }
+        }
 
 
 //图片懒加载
-import LazyLoad from 'react-lazyload';
+        import LazyLoad from 'react-lazyload';
 
-data.map((v,i) => {
-        return (
-            <LazyLoad 
-                height={200} 
-                scrollContainer=".wrap_box"//滚动添加到容器上
-            >
-               <img src={v.photos[0].url} style={{width:'100%',height:200}}/>
-            </LazyLoad>
-        )
-})
+        data.map((v,i) => {
+                return (
+                    <LazyLoad 
+                        height={200} 
+                        scrollContainer=".wrap_box"//滚动添加到容器上
+                    >
+                       <img src={v.photos[0].url} style={{width:'100%',height:200}}/>
+                    </LazyLoad>
+                )
+        })
 
 
 //路由懒加载
-    //package  内容配置
-    "babel": {
-    "presets": [
-        "react-app"
-      ],
-      "plugins": [
-        [
-          "@babel/plugin-syntax-dynamic-import",
-          {
-            "legacy": true
-          }
-        ]
-      ]
-    }
+        //package  内容配置
+        "babel": {
+        "presets": [
+            "react-app"
+          ],
+          "plugins": [
+            [
+              "@babel/plugin-syntax-dynamic-import",
+              {
+                "legacy": true
+              }
+            ]
+          ]
+        }
 
-    //index.js入口文件
-    import loadable from './pages/abc'
+        //index.js入口文件
+        import loadable from './pages/abc'
 
-    const Abc = loadable(() => import('./pages/index'))//将需要加载的页面传过去
-    const App = loadable(() => import('./App'))
+        const Abc = loadable(() => import('./pages/index'))//将需要加载的页面传过去
+        const App = loadable(() => import('./App'))
 
-    //封装的懒加载组件
-    import React from 'react'
-    import Loadable from 'react-loadable';
+        //封装的懒加载组件
+        import React from 'react'
+        import Loadable from 'react-loadable';
 
-    const LoadinC = () => <div>loading</div>
+        const LoadinC = () => <div>loading</div>
 
-    export default (loader, loading = LoadinC) => {
-        return Loadable({
-            loader: loader,//需要加载的页面
-            loading
-        })
-    }
+        export default (loader, loading = LoadinC) => {
+            return Loadable({
+                loader: loader,//需要加载的页面
+                loading
+            })
+        }
 
 
 // less配置
-   cnpm i less less-loader -S
-   //webpack.config.js   48行 替换成 const cssRegex = /\.(css|less)$/;
-   //     90行
-     {
-        loader: require.resolve('css-loader'),
-        options: cssOptions,
-     },
-   // 放在上面内容的下边
-    {
-      loader: require.resolve('less-loader'), // compiles Less to CSS
-      options: {
-        modifyVars: {},
-        javascriptEnabled: true,
-      },
-    },
+         cnpm i less less-loader -S
+         //webpack.config.js   48行 替换成 const cssRegex = /\.(css|less)$/;
+         //     90行
+           {
+              loader: require.resolve('css-loader'),
+              options: cssOptions,
+           },
+         // 放在上面内容的下边
+          {
+            loader: require.resolve('less-loader'), // compiles Less to CSS
+            options: {
+              modifyVars: {},
+              javascriptEnabled: true,
+            },
+          },
 
 
+//配置多个代理
+          文件名setupProxy.js  放在src文件夹下
+          //setupProxy.js   里的内容
+          cnpm i http-proxy-middleware -D
 
+          const proxy = require('http-proxy-middleware')
+          module.exports = function(app) {
+              app.use(
+                  proxy('/api', {
+                      target: 'https://blogs.zdldove.top',
+                      changeOrigin: true,
+                      pathRewrite: {
+                          '^/api': ''
+                      }
+                  })
+              )
+              app.use(
+                  proxy('/app', {
+                      target: 'http://www.suming9266.top',
+                      changeOrigin: true,
+                      pathRewrite: {
+                          '^/app': ''
+                      }
+                  })
+              )
+          }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
 
