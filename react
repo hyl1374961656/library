@@ -114,7 +114,19 @@ data.map((v,i) => {
 // less配置
    cnpm i less less-loader -S
    //webpack.config.js   48行 替换成 const cssRegex = /\.(css|less)$/;
-
+   //     90行
+     {
+        loader: require.resolve('css-loader'),
+        options: cssOptions,
+     },
+   // 放在上面内容的下边
+    {
+      loader: require.resolve('less-loader'), // compiles Less to CSS
+      options: {
+        modifyVars: {},
+        javascriptEnabled: true,
+      },
+    },
 
 
 
