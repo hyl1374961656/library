@@ -111,8 +111,9 @@ data.map((v,i) => {
     }
 
 
-
-
+// less配置
+   cnpm i less less-loader -S
+   //webpack.config.js   48行 替换成 const cssRegex = /\.(css|less)$/;
 
 
 
