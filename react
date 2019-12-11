@@ -313,4 +313,20 @@
             </PersistGate>
         </Provider>
 
+        //需要使用redux数据的页面
+        import { connect } from 'react-redux'
+        export default @connect(state => {
+          return {
+            dataTable: state.dataTable,
+          }
+        }, {
+          // 获取表格数据
+          getData: () => {
+            return {
+              type: 'TABLE_DATA',
+              payload: get('/api/banner/list')
+            }
+          }
+        })
+
 
