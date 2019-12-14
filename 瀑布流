@@ -1,9 +1,12 @@
 //瀑布流
         cnpm i masonry-layout -S
+        cnpm i imagesloaded -S
+        cnpm i react-infinite-scroller -S
         
         import React from 'react'
         import Masonry from 'masonry-layout'
         import InfiniteScroll from 'react-infinite-scroller'
+        import imagesLoaded from 'imagesloaded'
         import axios from 'axios'
         import qs from 'qs'
         import cs from 'classnames'
@@ -23,6 +26,29 @@
         // resize:  false // 改变窗口大小将不会影响布局
         // initLayout: true // 初始化布局，设未true可手动初试化布局
 
+        const arr = [
+          'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3008142408,2229729459&fm=26&gp=0.jpg',
+          'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3437217665,1564280326&fm=26&gp=0.jpg',
+          'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2458227883,4095122505&fm=26&gp=0.jpg',
+          'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1761250919,1896060533&fm=26&gp=0.jpg',
+          'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2852083094,372235004&fm=26&gp=0.jpg',
+          'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2944705163,3932100810&fm=26&gp=0.jpg',
+          'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3104686528,572431609&fm=26&gp=0.jpg',
+          'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1576288847&di=27669bdca3862cfd87204e465ae20ccd&src=http://i0.hdslb.com/bfs/article/15adf7744c813f5fba147c7dd019ba6000596946.jpg',
+          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1576298935421&di=7afeda919c257ac23eb6cda27c3bfa94&imgtype=0&src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F6e7a964fbb56909216a257a67f84ef6e694dcef0.jpg',
+          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1576298935420&di=1027ff51e6a6e70ea9375e74c26d8e28&imgtype=0&src=http%3A%2F%2Fimgup04.qu99.com%2Fqu99%2F2019-04%2F06%2F10%2F15545193962159_0.jpg',
+          'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3008142408,2229729459&fm=26&gp=0.jpg',
+          'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3437217665,1564280326&fm=26&gp=0.jpg',
+          'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2458227883,4095122505&fm=26&gp=0.jpg',
+          'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1761250919,1896060533&fm=26&gp=0.jpg',
+          'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2852083094,372235004&fm=26&gp=0.jpg',
+          'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2944705163,3932100810&fm=26&gp=0.jpg',
+          'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3104686528,572431609&fm=26&gp=0.jpg',
+          'https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1576288847&di=27669bdca3862cfd87204e465ae20ccd&src=http://i0.hdslb.com/bfs/article/15adf7744c813f5fba147c7dd019ba6000596946.jpg',
+          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1576298935421&di=7afeda919c257ac23eb6cda27c3bfa94&imgtype=0&src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F6e7a964fbb56909216a257a67f84ef6e694dcef0.jpg',
+          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1576298935420&di=1027ff51e6a6e70ea9375e74c26d8e28&imgtype=0&src=http%3A%2F%2Fimgup04.qu99.com%2Fqu99%2F2019-04%2F06%2F10%2F15545193962159_0.jpg'
+        ]
+
         export default class extends React.PureComponent {
           constructor (props) {
             super(props)
@@ -40,9 +66,30 @@
             // new Masonry(节点, 配置)
             new Masonry(document.querySelector('.pages-hoc'), {
               itemSelector: '.d', // 要布局的网格元素
-              columnWidth: 200,  // 获取节点 可以自动计算每列的宽度
+              columnWidth: document.querySelector('.d'),  // 获取节点 可以自动计算每列的宽度
               fitWidth: true, // 设置网格容器宽度等于网格宽度
               gutter: 20,//元素左右两边的距离
+            })
+          }
+
+          imageLoad = () => {
+
+            const elload = imagesLoaded('.pages-hoc')
+            elload.on('always',() => {
+              this.advanceWidth()
+              console.log('图片已全部加载，或被确认加载失败');
+            })
+            elload.on('done',() => {
+              console.log('图片全部加载成功');
+            })
+            elload.on('fail',() => {
+              this.advanceWidth()
+              console.log('图片已全部加载，且至少一个图片加载失败');
+            })
+            elload.on('progress',( instance, image ) => {
+              console.log('每张图片加载完');
+              var result = image.isLoaded ? 'loaded' : 'broken';
+              console.log( '加载结果 ' + result + ' 图片地址 ' + image.img.src );
             })
           }
 
@@ -54,16 +101,20 @@
             if (count && data.length >= count) {
               return false
             }
+
             // page 是当前请求第几页数据
             // limit 每页我需要返回的数据条数
             axios.post('https://blogs.zdldove.top/Home/Apis/listWithPage', qs.stringify({ page, limit: 20 }))
               .then(res => {
-                console.log(res)
+                res.data.result.list.map((v,i) => {
+                  v.img = arr[i]
+                })
+                console.log(res.data.result.list)
                 this.setState({
                   data: [...data, ...res.data.result.list],
                   count: res.count,
                 },() => {
-                  this.advanceWidth()
+                  this.imageLoad()
                 })
               })
               .catch(err => console.log(err))
@@ -88,6 +139,8 @@
                           key={key} 
                           className={cs('d', {d1: key%2 === 0, d2: key%2 !== 0})}
                         >
+                          <img src={dt.img}/>
+                          <p>{dt.title}</p>
                         </div>
                       ))
                     }
