@@ -1,0 +1,78 @@
+//需要用到WebSocket的页面
+      import React from 'react'
+
+      export default class extends React.Component {
+          constructor (props) {
+              super(props)
+              this.ws = new WebSocket("ws://localhost:8181")
+              this.WebSocketTest()
+          }
+
+          WebSocketTest = () => {
+              if ("WebSocket" in window)
+              {
+                  alert("您的浏览器支持 WebSocket!");
+
+                  this.ws.onopen = () => {
+                      // Web Socket 已连接上，使用 send() 方法发送数据
+                      this.ws.send("发送数据");
+                      alert("数据发送中...");
+                  };
+
+                  this.ws.onmessage = evt => { 
+                      var received_msg = evt.data;
+                      alert("数据已接收...");
+                  };
+
+                  this.ws.onclose = () => { 
+                      // 关闭 websocket
+                      alert("连接已关闭..."); 
+                  };
+              }
+
+              else
+              {
+                  // 浏览器不支持 WebSocket
+                  alert("您的浏览器不支持 WebSocket!");
+              }
+          }
+
+          onSend = () => {
+              this.ws.send('发送数据')
+          }
+
+          render() {
+              return (
+                  <>
+                      <button onClick={this.onSend}>sorket</button>
+                  </>
+              )
+          }
+      }
+      
+//server.js文件
+      var WebSocketServer = require('ws').Server
+      wss = new WebSocketServer({ port:8181 })
+      wss.on('connection', function(ws) {
+          ws.on('message', function (message) {
+              console.log('我的被前端触发的', message)
+              ws.send('d2')
+          })
+          setInterval(() => {
+              ws.send('d1')
+          }, 3000)
+      })
+
+      // const Koa = require('koa')
+      // const app = new Koa()
+
+      // app.use( async ( ctx ) => {
+      //   ctx.body = 'hello '
+      // })
+
+      // app.listen(3333)
+      // console.log('[demo] start-quick is starting at port 3000')
+      
+      
+      1. 在项目下运行 pm2 start server.js
+      2. pm2 logs
