@@ -1,0 +1,87 @@
+// actions文件夹下内容
+      import services from '@/services/api'
+      import { request, get } from '@/utils/request'
+
+      // 获取图片列表数据
+      export const getIScrollImages = () => {
+        return {
+          type: 'GET_IMAGES',
+          payload: request(services.slide),
+        }
+      }
+
+      // 首页导航
+      export const getNavs = () => {
+        return {
+          type: 'NAVS',
+          payload: get(services.nav),
+        }
+      }
+
+      // 获取商品列表数据
+      export const getCommodity = () => {
+        return {
+          type: 'GNC_COMMODITY_HPP',
+          payload: get(services.goodsLevel),
+        }
+      }
+
+//services文件夹下的api.js内容
+       export default {
+        slide: '/api/home/index/slide', // 图片滚动列表
+        nav: '/api/home/index/nav', // 首页导航
+        goodsLevel: 'api/home/index/goodsLevel', // 推荐商品列表
+        menu: '/api/home/category/menu', // 商品分类列表
+        show: '/api/home/category/show',  // 商品分类详情
+        dologin: '/index/qybapi/dologin',  // 登录
+      }
+      
+
+//store.js文件夹内容
+      import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+      import promise from 'redux-promise'
+      import thunk from 'redux-thunk'
+      import { persistReducer } from 'redux-persist'
+      import storage from 'redux-persist/lib/storage'
+      import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
+      import { home, menuList, login } from '@/reducer'
+
+      // 我要对哪些state做数据持久化
+      const rootPersistConfig = {
+        key: 'root',
+        storage: storage,
+        stateReconciler: autoMergeLevel2,
+      }
+
+      // 单独为 某个 reduce 做数据持久化
+      const myPersistReducer = combineReducers({
+        home,
+        menuList,
+        login: persistReducer(
+          rootPersistConfig,
+          login
+        ),
+      })
+
+      const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+      const store = createStore(
+        myPersistReducer,
+        composeEnhancers(applyMiddleware(promise, thunk))
+      )
+
+      window.store = store
+
+      export { store }
+
+
+
+
+
+
+
+
+
+
+
+
