@@ -390,7 +390,12 @@
         }
 
 
-
+//路径配置
+        //webpack.config.js文件下
+        //alias里面
+        //320行
+        '@': path.resolve(__dirname, '../src'),
+        '@@': path.resolve(__dirname, '../src/components')
 
 
 
