@@ -36,6 +36,30 @@
         dologin: '/index/qybapi/dologin',  // 登录
       }
       
+//reducer里面写
+        export default function (state = initState, action) {
+        switch (action.type) {
+          // 导航列表
+          case 'NAVS':
+            return {
+              ...state,
+              navs: action.payload.data
+            }
+
+          // 商品列表
+          case 'GNC_COMMODITY_HPP':
+            const [ dataWearing, dataWomens, dataComputer ] = filterData(action.payload.data)
+            return { 
+              ...state,
+              dataWearing,
+              dataWomens,
+              dataComputer,
+            }
+
+          default:
+            return state
+        }
+      }
 
 //store.js文件夹内容
       import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
@@ -75,7 +99,7 @@
       export { store }
 
 
-
+      //页面需引用aciton
 
 
 
