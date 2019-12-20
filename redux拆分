@@ -106,7 +106,7 @@
       import { login } from '../actions/home'
 
       export default @connect(state => ({
-          name: state.home.data, // 数据
+          token: state.home.token, // 数据
       }), {
           login
       })
