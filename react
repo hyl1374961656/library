@@ -425,4 +425,26 @@
 //路由跳转不记录
         this.props.history.replace("/type/list")
 
+//ant 表单插件写入自己的正则判断
+        onRule = (rule, value, callback) => {
+           const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/ig
+             if (value && !value.match(reg)) {
+                  callback('必须有字母和数字！')
+             }
+           callback()
+        }
+
+        rules: [
+                { validator : this.onRule },
+                { required: true, message: 'Please input your username!' }
+        ]
+
+
+
+
+
+
+
+
+
 
