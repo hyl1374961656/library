@@ -422,5 +422,7 @@
         //解析成对象的格式
         qs.parse(props.location.search, { ignoreQueryPrefix: true })
 
+//路由跳转不记录
+        this.props.history.replace("/type/list")
 
 
