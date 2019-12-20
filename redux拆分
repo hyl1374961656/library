@@ -103,7 +103,7 @@
       );
 
 //需要用到数据的页面
-      import { login } from '../actions/home'
+      import { login } from '../actions/login'
 
       export default @connect(state => ({
           token: state.home.token, // 数据
