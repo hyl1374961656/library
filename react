@@ -417,7 +417,10 @@
           url('../assets/fonts/iconfont.svg?t=1561725234037#iconfont') format('svg'); /* iOS 4.1- */
         }
 
-
+//参数解析
+        <Link to="/login/?name=郝云龙&sex=男">LOGIN</Link>
+        //解析成对象的格式
+        qs.parse(props.location.search, { ignoreQueryPrefix: true })
 
 
 
