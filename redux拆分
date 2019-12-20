@@ -1,28 +1,12 @@
 // actions文件夹下内容
-      import services from '@/services/api'
-      import { request, get } from '@/utils/request'
+      //login.js文件
+      import { post, get } from '../utils/request'
+      import { DOLOGIN } from '../constants/actionTypes'
 
-      // 获取图片列表数据
-      export const getIScrollImages = () => {
+      export const dologin = () => {
         return {
-          type: 'GET_IMAGES',
-          payload: request(services.slide),
-        }
-      }
-
-      // 首页导航
-      export const getNavs = () => {
-        return {
-          type: 'NAVS',
-          payload: get(services.nav),
-        }
-      }
-
-      // 获取商品列表数据
-      export const getCommodity = () => {
-        return {
-          type: 'GNC_COMMODITY_HPP',
-          payload: get(services.goodsLevel),
+          type: DOLOGIN,
+          payload: '',
         }
       }
 
@@ -36,29 +20,31 @@
         dologin: '/index/qybapi/dologin',  // 登录
       }
       
-//reducer里面写
-        export default function (state = initState, action) {
-        switch (action.type) {
-          // 导航列表
-          case 'NAVS':
-            return {
-              ...state,
-              navs: action.payload.data
-            }
+//reducer文件夹内容
+      //login.js文件
+      import { DOLOGIN } from '../constants/actionTypes'
+      
+      const initState = {
+        token: '',
+      }
 
-          // 商品列表
-          case 'GNC_COMMODITY_HPP':
-            const [ dataWearing, dataWomens, dataComputer ] = filterData(action.payload.data)
-            return { 
-              ...state,
-              dataWearing,
-              dataWomens,
-              dataComputer,
-            }
+      export default function (state = initState, action) {
+        switch (action.type) {
+          case DOLOGIN:
+            return { ...state, token: action.payload }
 
           default:
             return state
         }
+      }
+      
+      //index.js文件
+      import login from './login'
+      import home from './home'
+
+      export {
+          home,
+          login
       }
 
 //store.js文件夹内容
@@ -68,40 +54,62 @@
       import { persistReducer } from 'redux-persist'
       import storage from 'redux-persist/lib/storage'
       import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
-      import { home, menuList, login } from '@/reducer'
+      import { login, home } from './reducer'
 
       // 我要对哪些state做数据持久化
       const rootPersistConfig = {
-        key: 'root',
-        storage: storage,
-        stateReconciler: autoMergeLevel2,
+          key: 'root',
+          storage: storage,
+          stateReconciler: autoMergeLevel2,
       }
 
       // 单独为 某个 reduce 做数据持久化
       const myPersistReducer = combineReducers({
-        home,
-        menuList,
-        login: persistReducer(
-          rootPersistConfig,
-          login
-        ),
+          home,
+          // persistReducer 做数据持久化
+          login: persistReducer(
+            rootPersistConfig,
+            login
+          ),
       })
 
       const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
       const store = createStore(
-        myPersistReducer,
-        composeEnhancers(applyMiddleware(promise, thunk))
+          myPersistReducer,
+          composeEnhancers(applyMiddleware(promise, thunk))
       )
-
-      window.store = store
 
       export { store }
 
+//入口文件的index.js文件
+      import React from 'react';
+      import ReactDOM from 'react-dom';
+      import 'antd/dist/antd.css'
+      import './index.css';
+      import Router from './router'
+      import { Provider } from 'react-redux'
+      import { persistStore } from 'redux-persist'
+      import { PersistGate } from 'redux-persist/lib/integration/react'
+      import { store } from './store'
 
-      //页面需引用aciton
+      ReactDOM.render(
+         <Provider store={store}>
+          <PersistGate loading={null} persistor={persistStore(store)}>
+            <Router />
+          </PersistGate>
+         </Provider>,
+         document.getElementById('root')
+      );
 
+//需要用到数据的页面
+      import { login } from '../actions/home'
 
+      export default @connect(state => ({
+          name: state.home.data, // 数据
+      }), {
+          login
+      })
 
 
 
