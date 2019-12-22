@@ -178,7 +178,12 @@
           })
         }
 
+//constants文件夹下的actionTypes.js文件
+      // login 的 type
+      export const DOLOGIN = 'DOLOGIN'
 
+      // home 的 type
+      export const HOME_DATA = 'HOME_DATA'
 
 
 
