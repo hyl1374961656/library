@@ -1,0 +1,215 @@
+//index.js入口文件
+      import React from 'react';
+      import ReactDOM from 'react-dom';
+      import Router from './router'
+      import 'antd/dist/antd.css'
+      import './index.css';
+      import { Provider } from 'react-redux'
+      import { persistStore } from 'redux-persist'
+      import { PersistGate } from 'redux-persist/lib/integration/react'
+      import { store } from './store'
+
+      ReactDOM.render(
+         <Provider store={store}>
+            <PersistGate loading={null} persistor={persistStore(store)}>
+               <Router />
+            </PersistGate>
+         </Provider>,
+         document.getElementById('root')
+      );
+      
+//store.js文件
+      import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+      import promise from 'redux-promise'
+      import thunk from 'redux-thunk'
+      import { persistReducer } from 'redux-persist'
+      import storage from 'redux-persist/lib/storage'
+      import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
+      import { home } from './reducer'
+
+      // 我要对哪些state做数据持久化
+      const rootPersistConfig = {
+          key: 'root',
+          storage: storage,
+          stateReconciler: autoMergeLevel2,
+      }
+
+      // 单独为 某个 reduce 做数据持久化
+      const myPersistReducer = combineReducers({
+          // persistReducer 做数据持久化
+          home: persistReducer(
+              rootPersistConfig,
+              home
+          ),
+      })
+
+      const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+      const store = createStore(
+          myPersistReducer,
+          composeEnhancers(applyMiddleware(promise, thunk))
+      )
+
+      export { store }
+
+//setupProxy.js文件
+      const proxy = require('http-proxy-middleware')
+
+      module.exports = function(app) {
+          app.use(
+              proxy('/api', {
+                  //配置接口代理
+                  target: 'https://api.baxiaobu.com',
+                  changeOrigin: true,
+                  pathRewrite: {
+                      '^/api': ''
+                  }
+              })
+          )
+      }
+      
+//router.js文件
+      import React from 'react';
+      import { BrowserRouter, Switch, Route } from "react-router-dom";
+      import Home from './pages/home'
+
+      export default class extends React.Component {
+          render() {
+              return (
+                  <BrowserRouter>
+                      <Switch>
+                          <Route path="/" component={Home} />
+                      </Switch>
+                  </BrowserRouter>
+              )
+          }
+      }
+
+//actions文件夹下home.js文件
+      import { HOMEDATA } from '../constants/actionTypes'
+
+      export const home = () => {
+          return {
+              type: HOMEDATA,
+              payload: '',
+          }
+      }
+      
+//assets文件夹内放置图片
+
+//components文件夹内放置公用组件
+
+//constants文件夹下actionTypes.js文件
+      // home 的 type
+      export const HOMEDATA = 'HOMEDATA'
+      
+//pages文件夹内放页面
+
+//reducer文件夹内
+      //home.js文件
+      import { HOMEDATA} from '../constants/actionTypes'
+
+      const initState = {
+          token: '',
+      }
+
+      export default function (state = initState, action) {
+          switch (action.type) {
+              case HOMEDATA:
+                  return { ...state, token: action.payload }
+              default:
+                  return state
+          }
+      }
+
+      //index.js文件
+      import home from './home'
+
+      export {
+          home
+      }
+      
+//services文件夹内
+      //api.js文件
+      export default {
+          dologin: '/api/index/qybapi/dologin',
+          table: '/app/Home/Apis/listWithPage'
+      }
+      
+//utils文件夹内
+      //request.js文件
+      import axios from 'axios'
+
+      let cancelToken = axios.CancelToken
+
+      const cancel = []
+
+      const removePending = config => {
+          for(let p in cancel){
+              if (cancel[p].u === config.url) {
+              cancel[p].f()
+              }
+          }
+      }
+
+      // 请求拦截器 发送一个请求之前
+      axios.interceptors.request.use(config => {
+          //在一个ajax发送前执行一下取消操作
+          removePending(config)
+          config.cancelToken = new cancelToken(c => {
+              cancel.push({ 
+                  f: c,
+                  u: config.url,
+              })
+          })
+              return config
+          }, error => {
+              return Promise.reject(error)
+      })
+
+      //添加响应拦截器
+      axios.interceptors.response.use(response => {
+          return response
+      }, error => {})
+
+      export function post (url, payload = {}) {
+          return new Promise((resolve, reject) => {
+            axios({
+              method: 'post',
+              url,
+              data: payload
+            })
+              .then(response => {
+                  resolve(response)
+              })
+              .catch(err => {
+                reject(err)
+              })
+          })
+        }
+
+        export function get (url, payload = {}) {
+          return new Promise((resolve, reject) => {
+            axios({
+              method: 'get',
+              url,
+              params: payload
+            })
+              .then(response => {
+                  resolve(response)
+              })
+              .catch(err => {
+                reject(err)
+              })
+          })
+        }
+
+
+      
+      
+      
+      
+      
+      
+      
+      
