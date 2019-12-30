@@ -1,76 +1,79 @@
-//vue state 数据持久化
-      import Vue from 'vue'
-      import Vuex from 'vuex'
-      import { post } from '@/utils/request'
-      import createPersistedState from "vuex-persistedstate";
+//hammer
+      用于检测触摸手势的 JavaScript 库
+      添加对触摸手势的支持并移除了点击的 300ms
+      支持最常见的单点和多点触摸手势，并且可以完全扩展以添加自定义手势
+      安卓触屏上，tap 和 click 可以同时触发，但是 click 会有 300ms 左右的延时
+      
+      1.1. tap
+      在指定的 DOM 区域内，一个手指轻拍或点击时触发该事件（类似 PC 端的 click），该事件最大点击时间为 250ms，如果超过 250ms 则按 press 事件处理
 
-      Vue.use(Vuex)
+      1.2. press
+      在指定的 DOM 区域内，这个事件相当于 PC 端的 Click 事件，不能包含任何的移动，最小按压时间为 500ms，常用于我们在手机上用的复制粘贴等功能
 
-      const moduleA = {
-        namespaced: true,
+      该事件事分别对以下事件进行监听并处理
 
-        state: {
-          name: 'moduleA',
-          age: '1'
-        },
+      pressup: 点击事件离开时触发
+      
+      1.3. pan
+      在指定的 DOM 区域内，一个手指放下并移动事件，即触屏中的拖动事件
 
-        mutations: {
-          increment () {
-            console.log(this.state)
-            console.log('moduleA')
-          },
-        },
+      该事件事分别对以下事件进行监听并处理
 
-        actions: {
-          onIncrement (context) {
-            context.commit('increment')
-          }
-        }
-      }
+      panstart: 拖动开始
+      panmove: 拖动过程
+      panend: 拖动结束
+      pancancel: 拖动取消
+      panleft: 向左拖动
+      panright: 向右拖动
+      panup: 向上拖动
+      pandown: 向下拖动
+      
+      1.4. swipe
+      在指定的 DOM 区域内，一个手指快速的在触屏上滑动，即平时用到最多的滑动事件
 
-      const store = new Vuex.Store({
+      该事件事分别对以下事件进行监听并处理
 
-          state: {
-            count: 0,
-            name: '郝云龙',
-            age: 20,
-            sex: '男',
-            data: [],
-          },
+      swipeleft: 向左滑动
+      swiperight: 向右滑动
+      swipeup: 向上滑动
+      swipedown: 向下滑动
+      
+      1.5. pinch
+      在指定的 DOM 区域内，两个手指（默认为两个手指，多指触控需要单独设置）或多个手指相对（越来越近）移动或相向（越来越远）移动时事件
 
-          mutations: {
-            increment (state) {
-              state.count++
-            },
-            setData (state, action) {
-              state.data = action
-            }
-          },
+      该事件事分别对以下事件进行监听并处理
 
-          actions: {
-            onIncrement (context) {
-              post('/Home/Apis/listWithPage')
-                .then(res => {
-                  context.commit('setData', res)
-                })
-            }
-          },
+      pinchstart: 多点触控开始
+      pinchmove: 多点触控过程
+      pinchend: 多点触控结束
+      pinchcancel: 多点触控取消
+      pinchin: 多点触控时两手指越来越近
+      pinchout: 多点触控时两手指越来越远
 
-          modules: {
-            moduleA
-          },
+      作者：青栀灬
+      链接：https://www.jianshu.com/p/0b0b9364f967
+      来源：简书
+      著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+      
+      1.6. rotate
+      在指定的 DOM 区域内，当两个手指或更多手指呈圆型旋转时触发
 
-          plugins: [createPersistedState({
-            key: 'vuex-data',
-            reducer(option) {
-              console.log(option)
-              return {
-                name: option.moduleA.name
-              }
-            }
-          })]
+      该事件事分别对以下事件进行监听并处理
 
+      rotatestart: 旋转开始
+      rotatemove: 旋转过程
+      rotateend: 旋转结束
+      rotatecancel: 旋转取消
+      
+      安装
+      NPM：npm install --save hammer.js
+      
+      componentDidMount () {
+        const app = new Hammer(document,querySelector('.pages-home'))
+        app.on('tag', evt => {
+          console.log(1)
         })
-        store.dispatch('moduleA/onIncrement')
-
-        export default store 
+        app.on('pressup', evt => {
+          console.log(evt)
+        })
+      }
