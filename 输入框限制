@@ -1,0 +1,22 @@
+// 手机号验证
+userNameChange = (e) => {
+  const { value } = e.target;
+  const reg = /^1([0-9]*)?$/;		// 以数字1开头，任意数字结尾，且中间出现零个或多个数字
+  if ((reg.test(value) && value.length < 12) || value === '') {
+    this.setState({
+      userName: value
+    })
+  }
+}
+
+
+// 纯数字验证
+vCodeChange = (e) => {
+  const { value } = e.target;
+  const reg = /^\d*?$/;	// 以任意数字开头和结尾，且中间出现零个或多个数字
+  if ((reg.test(value) && value.length < 7) || value === '') {
+    this.setState({
+      verificationCode: value
+    })
+  }
+}
