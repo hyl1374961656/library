@@ -430,9 +430,9 @@
         onRule = (rule, value, callback) => {
            const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/ig
              if (value && !value.match(reg)) {
-                  callback('必须有字母和数字！')
+                return Promise.reject('必须有字母和数字！')
              }
-           callback()
+           return Promise.resolve()
         }
 
         rules: [
