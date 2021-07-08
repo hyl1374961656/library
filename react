@@ -440,8 +440,20 @@
                 { required: true, message: 'Please input your username!' }
         ]
 
-
-
+//修改页面所有a标签点击后的target属性(事件代理)
+    const bodyDom = document.querySelector('#root')
+    bodyDom.onclick = function(ev) {
+      var ev = ev || window.event
+      var target = ev.target || ev.srcElement
+      ev.path.map(v => {
+        if (v.nodeName?.toLocaleLowerCase() == 'a') {
+          v.target = '_self'
+        }
+      })
+      if (target.nodeName.toLocaleLowerCase() == 'a') {
+        target.target = '_self'
+      }
+    }
 
 
 
