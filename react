@@ -455,8 +455,24 @@
       }
     }
 
-
-
+//数组里的empty转成"",都是""的话变成undefined
+    let tempArray = []
+    const n = tempArray.length
+    let num = 0
+    for (let m = 0; m < n; m++) {
+      if (!tempArray[m]) {
+        // 当前数组为empty时
+        tempArray[m] = ''
+      } else {
+        tempArray[m] = tempArray[m].trim() // 去掉当前数组空串
+      }
+      if (tempArray[m] === '' || tempArray[m] === null) {
+        num++ // 获取数组中空串个数
+      }
+    }
+    if (n === 0 || num === n) {
+      tempArray = undefined // 当数组中全部为空串时清除数组
+    }
 
 
 
