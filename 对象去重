@@ -9,7 +9,7 @@ let gg=[
 ]; 
 var obj = {}
 var pp = gg.reduce((cur,next)=>{
-	obj[next.id] ? " : obj[next.id] = true && cur. push(next)
+	obj[next.id] ? "" : obj[next.id] = true && cur. push(next)
 	return cur
 },[])
 console.log(pp)
